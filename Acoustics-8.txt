@@ -1,0 +1,35 @@
+/*Handling the click event i.e. the action which happens when we click on any song*/
+    holder.contentHolder?.setOnClickListener({
+
+        /*Let's discuss this peice of code*/
+        /*Firstly we define an object of the SongPlayingFragment*/
+        val songPlayingFragment = SongPlayingFragment()
+
+        /*A bundle is used to transfer data from one point in your activity to another
+        * Here we create an object of Bundle to send the sond details to the fragment so that we can display the song details there and also play the song*/
+        var args = Bundle()
+
+        /*putString() function is used for adding a string to the bundle object
+        * the string written in green is the name of the string which is placed in the bundle object with the value of that string written alongside
+        * Note: Remember the name of the strings/entities you place inside the bundle object as you will retrieve them later using the same name. And these names are case-sensitive*/
+        args.putString("songArtist", songObject?.artist)
+        args.putString("songTitle", songObject?.songTitle)
+        args.putString("path", songObject?.songData)
+        args.putInt("songID", songObject?.songID?.toInt() as Int)
+        args.putInt("songPosition", position)
+
+        /*Here the complete array list is sent*/
+        args.putParcelableArrayList("songData", songDetails)
+
+        /*Note: We have only added the details to the bundle object but we still have to pass this bundle to the song playing fragment. 
+        * Kindly hold on, we will do it a bit later*/
+        
+
+        /*Now after placing the song details inside the bundle, we inflate the song playing fragment*/
+        (mContext as FragmentActivity).supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.details_fragment, songPlayingFragment)
+                .commit()
+    })
+
+

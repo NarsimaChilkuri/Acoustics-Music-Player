@@ -1,0 +1,25 @@
+/*This function is used to create the menu
+* Mainly we create the menu file n XML and inflate it here in this function
+* Note: You might not find the "redirect_icon", kindly use the name "ic_back_to_list"*/
+override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    menu?.clear()
+    inflater?.inflate(R.menu.song_playing_menu, menu)
+    super.onCreateOptionsMenu(menu, inflater)
+}
+override fun onPrepareOptionsMenu(menu: Menu?) {
+    super.onPrepareOptionsMenu(menu)
+    val item: MenuItem? = menu?.findItem(R.id.action_redirect)
+    item?.isVisible = true
+}
+/*Here we handle the click event of the menu item*/
+override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    when (item?.itemId) {
+    /*If the id of the item click is action_redirect
+    * we navigate back to the list*/
+        R.id.action_redirect -> {
+            Statified.myActivity?.onBackPressed()
+            return false
+        }
+    }
+    return false
+}

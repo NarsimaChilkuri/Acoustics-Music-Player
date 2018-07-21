@@ -1,0 +1,36 @@
+/*Function to handle the event where the song completes playing*/
+fun onSongComplete() {
+
+    /*If shuffle was on then play a random next song*/
+    if (currentSongHelper?.isShuffle as Boolean) {
+        playNext("PlayNextLikeNormalShuffle")
+        currentSongHelper?.isPlaying = true
+    } else {
+
+        /*If loop was ON, then play the same ong again*/
+        if (currentSongHelper?.isLoop as Boolean) {
+            currentSongHelper?.isPlaying = true
+            var nextSong = fetchSongs?.get(currentPosition)
+            currentSongHelper?.currentPosition = currentPosition
+            currentSongHelper?.songPath = nextSong?.songData
+            currentSongHelper?.songTitle = nextSong?.songTitle
+            currentSongHelper?.songArtist = nextSong?.artist
+            currentSongHelper?.songId = nextSong?.songID as Long
+
+           
+            mediaPlayer?.reset()
+            try {
+                mediaPlayer?.setDataSource(myActivity, Uri.parse(currentSongHelper?.songPath))
+                mediaPlayer?.prepare()
+                mediaPlayer?.start()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } else {
+
+            /*If loop was OFF then normally play the next song*/
+            playNext("PlayNextNormal")
+            currentSongHelper?.isPlaying = true
+        }
+    }
+}

@@ -1,0 +1,93 @@
+package com.internshala.echo.fragments
+import android.app.Activity
+import android.content.Context
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.internshala.echo.R
+/**
+ * A simple [Fragment] subclass.
+ */
+class SongPlayingFragment : Fragment() {
+    var myActivity: Activity? = null
+
+    /*This is the media player variable. We would be using this to play/pause the music*/
+    var mediaPlayer: MediaPlayer? = null
+
+    /*Similar onCreateView() method of the fragment, which we used for the MainScreenFragment*/
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        return inflater!!.inflate(R.layout.fragment_song_playing, container, false)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        myActivity = context as Activity
+    }
+
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity)
+        myActivity = activity
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        /*Now this is new. Let's see what is all this about*/
+        /*These are the variables used for retrieving the Bundle items sent from the main screen
+        * Now remember I told you to remember the names of these Bundle items, they will be used here*/
+        var path: String? = null
+        var _songTitle: String? = null
+        var _songArtist: String? = null
+        var songId: Long = 0
+
+        /*See that we have used a try catch block here
+        * The reason for doing so is that, it may happen that the bundle object does not have these in it and the app may crash
+        * So in order to prevent the crash we use try-catch block. This block is known as the error-handling block*/
+        try {
+
+            /*path is retrieved using the same key (path) which was used to send it*/
+            path = arguments.getString("path")
+
+            /*song title retrieved with its key songTitle*/
+            _songTitle = arguments.getString("songTitle")
+
+            /*song artist with the key songArtist*/
+            _songArtist = arguments.getString("songArtist")
+
+            /*song id with the key SongId*/
+            songId = arguments.getInt("songId").toLong()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        /*here we initialise the media player object*/
+        mediaPlayer = MediaPlayer()
+
+        /*here we tell the media player object that we would be streaming the music*/
+        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
+        /*Here also we use the error-handling as the path we sent may return a null object*/
+        try {
+
+            /*The data source set the song to the media player object*/
+            mediaPlayer?.setDataSource(myActivity, Uri.parse(path))
+
+            /*Before plaing the music we prepare the media player for playback*/
+            mediaPlayer?.prepare()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        /*If all of the above goes well we start the music using the start() method*/
+        mediaPlayer?.start()
+    }
+}
